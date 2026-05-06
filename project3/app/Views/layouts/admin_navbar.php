@@ -1,33 +1,21 @@
+<?php helper('auth'); ?>
 
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="<?= base_url() ?>">MyBlog</a>
-        <button class="navbar-toggler" type="button" data-bs-
-            toggle="collapse" data-bs-target="#navbarNav" aria-
-            controls="navbarNav" aria-expanded="false" aria-label="Togglenavigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="<?=
-                                                base_url('admin/post') ?>">Blog</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a href="<?= base_url('admin/post/new') ?>"
-                        class="btn btn-primary mr-3">New Post</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?=
-                                                base_url('admin/setting') ?>">Setting</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?=
-                                                base_url('auth/logout') ?>">Logout</a>
-                </li>
-            </ul>
+<nav class="navbar navbar-expand-lg navbar-clean fixed-top bg-white border-bottom"
+    style="margin-left: 280px; z-index: 1030; height: 80px;">
+    <div class="container-fluid px-4 px-lg-5">
+        <a class="navbar-brand font-serif" href="<?= base_url() ?>" style="font-size: 1.5rem; color: var(--text-dark);">
+            Admin<span style="color: var(--accent-pink);">Panel</span>
+        </a>
+
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <div class="text-end d-none d-sm-block">
+                <div class="small fw-bold" style="color: var(--text-dark);"><?= user()->username ?></div>
+                <div class="text-muted" style="font-size: 0.7rem;">Super Administrator</div>
+            </div>
+            <div class="rounded-circle bg-blue-light d-flex align-items-center justify-content-center"
+                style="width: 45px; height: 45px; border: 2px solid white; shadow: var(--card-shadow);">
+                <span class="fw-bold text-primary">A</span>
+            </div>
         </div>
     </div>
 </nav>

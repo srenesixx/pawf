@@ -12,14 +12,24 @@ class PostAdmin extends BaseController
     public function index()
     {
         $post = new PostModel();
+        
+        $keyword = $this->request->getVar('keyword');
+        if ($keyword) {
+            $post->like('title', $keyword);
+        }
+
         $data['posts'] = $post->findAll();
+        $data['keyword'] = $keyword;
+        
         echo view('admin/admin_post_list', $data);
     }
     //--------------------------------------------------------------
-    public function preview($id)
+    public function preview($slug)
     {
         $post = new PostModel();
-        $data['post'] = $post->where('id', $id)->first();
+        $data['post'] = $post->where('slug', $slug)->first();
+        $data['is_admin'] = true;
+        
         if (!$data['post']) {
             throw
             PageNotFoundException::forPageNotFound();
@@ -50,22 +60,27 @@ class PostAdmin extends BaseController
         echo view('admin/admin_post_create');
     }
     //---------------------------------------------------------
-    public function edit($id)
+    public function edit($slug)
     {
         // ambil artikel yang akan diedit
         $post = new PostModel();
-        $data['post'] = $post->where('id', $id)->first();
+        $data['post'] = $post->where('slug', $slug)->first();
+        
+        if (!$data['post']) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
         // lakukan validasi data artikel
         $validation = \Config\Services::validation();
         $validation->setRules([
-            'id' => 'required',
             'title' => 'required'
         ]);
-        $isDataValid =
-            $validation->withRequest($this->request)->run();
-        // jika data vlid, maka simpan ke database
+        
+        $isDataValid = $validation->withRequest($this->request)->run();
+        
+        // jika data valid, maka simpan ke database
         if ($isDataValid) {
-            $post->update($id, [
+            $post->update($data['post']['id'], [
                 "title" => $this->request->getPost('title'),
                 "content" => $this->request->getPost('content'),
                 "status" => $this->request->getPost('status')
@@ -76,10 +91,13 @@ class PostAdmin extends BaseController
         echo view('admin/admin_post_update', $data);
     }
     //-------------------------------------------------------------
-    public function delete($id)
+    public function delete($slug)
     {
         $post = new PostModel();
-        $post->delete($id);
+        $record = $post->where('slug', $slug)->first();
+        if ($record) {
+            $post->delete($record['id']);
+        }
         return redirect('admin/post');
     }
 }

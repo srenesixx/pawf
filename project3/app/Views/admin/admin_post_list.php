@@ -1,73 +1,67 @@
 <?= $this->extend('layouts/admin_template') ?>
 
 <?= $this->section('content') ?>
-<div class="container mt-5">
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="display-6">Blog &gt; Admin</h1>
-        </div>
-    </div>
 
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($posts as $post): ?>
-                    <tr>
-                        <td><?= $post['id'] ?></td>
-                        <td>
-                            <strong><?= $post['title'] ?></strong>
-                            <br>
-                            <small class="text-muted"><?= $post['created_at'] ?></small>
-                        </td>
-                        <td>
-                            <?php if ($post['status'] === 'published'): ?>
-                                <small class="text-success"><?= $post['status'] ?></small>
-                            <?php else: ?>
-                                <small class="text-muted"><?= $post['status'] ?></small>
-                            <?php endif ?>
-                        </td>
-                        <td>
-                            <a href="<?= base_url('admin/post/' . $post['id'] . '/preview') ?>" class="btn btn-sm btn-outline-secondary" target="_blank">Preview</a>
-                            <a href="<?= base_url('admin/post/' . $post['id'] . '/edit') ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
-                            <a href="#" data-href="<?= base_url('admin/post/' . $post['id'] . '/delete') ?>" onclick="confirmToDelete(this)" class="btn btn-sm btn-outline-danger">Delete</a>
-                        </td>
-                    </tr>
-                <?php endforeach ?>
-            </tbody>
-        </table>
+<div class="row align-items-center mb-5 reveal">
+    <div class="col-lg-6">
+        <h2 class="font-serif fw-bold h1 mb-1">Posts Archive</h2>
+        <p class="text-muted small mb-0 fw-bold ls-1 opacity-50">KELOLA SEMUA ARTIKEL ANDA DALAM SATU TAMPILAN BERSIH.</p>
     </div>
-
-    <div class="modal fade" id="confirm-dialog" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h2 class="h2">Are you sure?</h2>
-                    <p>The data will be deleted and lost forever</p>
+    <div class="col-lg-6 mt-4 mt-lg-0">
+        <div class="d-flex gap-3 justify-content-lg-end">
+            <form action="<?= base_url('admin/post') ?>" method="get" class="flex-grow-1" style="max-width: 400px;">
+                <div class="input-group bg-white rounded-pill p-1 shadow-sm border">
+                    <input type="text" name="keyword" class="form-control border-0 bg-transparent ps-3" 
+                           placeholder="Search titles..." value="<?= esc($keyword) ?>">
+                    <button class="btn btn-primary rounded-pill px-4" type="submit">Search</button>
                 </div>
-                <div class="modal-footer">
-                    <a href="#" id="delete-button" class="btn btn-danger">Delete</a>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </div>
+            </form>
+            <a href="<?= base_url('admin/post/new') ?>" class="btn btn-primary rounded-pill px-4 shadow-lg fw-800 d-flex align-items-center gap-2">
+                <span>+</span> New Post
+            </a>
         </div>
     </div>
 </div>
 
-<script>
-    function confirmToDelete(el) {
-        document.getElementById('delete-button').setAttribute('href', el.dataset.href);
-        const myModal = new bootstrap.Modal(document.getElementById('confirm-dialog'), {
-            keyboard: false
-        });
-        myModal.show();
-    }
-</script>
+<div class="clean-card p-0 shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr class="bg-light">
+                    <th class="py-4 border-0 small text-uppercase text-muted fw-800 ls-1 text-center">Title</th>
+                    <th class="py-4 border-0 small text-uppercase text-muted fw-800 ls-1 text-center">Date Published</th>
+                    <th class="py-4 border-0 small text-uppercase text-muted fw-800 ls-1 text-center">Status</th>
+                    <th class="py-4 border-0 small text-uppercase text-muted fw-800 ls-1 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($posts as $post): ?>
+                    <tr class="align-middle">
+                        <td class="py-4 fw-800 text-dark text-center"><?= esc($post['title']) ?></td>
+                        <td class="py-4 text-muted small text-center"><?= date('D, d M Y', strtotime($post['created_at'])) ?></td>
+                        <td class="py-4 text-center">
+                            <?php if (strtolower($post['status']) === 'published'): ?>
+                                <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 small fw-800 border border-success border-opacity-25">Published</span>
+                            <?php else: ?>
+                                <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3 py-2 small fw-800 border border-warning border-opacity-25">Draft</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="py-4">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="<?= base_url('admin/post/' . $post['slug'] . '/preview') ?>"
+                                    class="btn btn-sm btn-light text-primary rounded-pill px-3 fw-bold">detail</a>
+                                <a href="<?= base_url('admin/post/' . $post['slug'] . '/edit') ?>"
+                                    class="btn btn-sm btn-light rounded-pill px-3 fw-bold">Edit</a>
+                                <a href="<?= base_url('admin/post/' . $post['slug'] . '/delete') ?>"
+                                    class="btn btn-sm btn-light text-danger rounded-pill px-3 fw-bold"
+                                    onclick="return confirm('Hapus artikel ini?')">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <?= $this->endSection() ?>
