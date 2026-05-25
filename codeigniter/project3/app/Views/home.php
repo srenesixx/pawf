@@ -60,7 +60,7 @@
                                     <?= esc($post['title']) ?>
                                 </h3>
                                 <p class="text-muted small mb-4 flex-grow-1">
-                                    <?= esc(substr(strip_tags($post['content']), 0, 140)) ?>...
+                                    <?= esc(substr(strip_tags((string) $post['content']), 0, 140)) ?>...
                                 </p>
                                 <div class="pt-4 border-top mt-auto d-flex justify-content-end">
                                     <a href="<?= base_url('post/' . $post['slug']) ?>"
