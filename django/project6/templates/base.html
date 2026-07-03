@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Django Blog — Temukan artikel, cerita, dan wawasan terkini.">
+  <title>Django Blog</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link href="{% static 'css/base.css' %}" rel="stylesheet">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+</head>
+
+<body>
+  <!-- ── Header ──────────────────────────────────────────── -->
+  <header>
+    <a href="{% url 'home' %}" class="brand">✦ Django Blog</a>
+    <nav>
+      <a href="{% url 'home' %}">Home</a>
+    </nav>
+  </header>
+
+  <!-- ── Main Layout: sidebar + content ─────────────────── -->
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+      <!-- Search -->
+      <div class="sidebar-widget">
+        <h3 class="sidebar-title">🔍 Cari Artikel</h3>
+        <form method="get" action="{% url 'home' %}" class="sidebar-search">
+          <input type="search" name="q" value="{{ query }}" placeholder="Ketik kata kunci...">
+          <button type="submit">Cari</button>
+        </form>
+      </div>
+
+      <!-- Categories -->
+      <div class="sidebar-widget">
+        <h3 class="sidebar-title">📁 Kategori</h3>
+        <ul class="filter-list">
+          <li>
+            <a href="{% url 'home' %}{% if query %}?q={{ query }}{% endif %}"
+               class="filter-item {% if not active_category %}active{% endif %}">
+              Semua Kategori
+            </a>
+          </li>
+          {% for cat in categories %}
+          <li>
+            <a href="{% url 'home' %}?category={{ cat.id }}{% if query %}&q={{ query }}{% endif %}"
+               class="filter-item {% if active_category.id == cat.id %}active{% endif %}">
+              {{ cat.name }}
+              <span class="filter-count">{{ cat.posts.count }}</span>
+            </a>
+          </li>
+          {% empty %}
+          <li><span class="filter-empty">Belum ada kategori</span></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Tags -->
+      <div class="sidebar-widget">
+        <h3 class="sidebar-title">🏷️ Tags</h3>
+        <div class="tag-cloud">
+          {% for tag in tags %}
+          <a href="{% url 'home' %}?tag={{ tag.id }}{% if query %}&q={{ query }}{% endif %}"
+             class="tag-chip {% if active_tag.id == tag.id %}tag-chip--active{% endif %}">
+            {{ tag.name }}
+          </a>
+          {% empty %}
+          <span class="filter-empty">Belum ada tag</span>
+          {% endfor %}
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+      {% block content %}
+      {% endblock %}
+    </main>
+
+  </div>
+
+  <!-- ── Footer ──────────────────────────────────────────── -->
+  <footer>
+    <p>© 2026 Django Blog · Dibangun dengan ❤️ dan Django</p>
+  </footer>
+</body>
+
+</html>

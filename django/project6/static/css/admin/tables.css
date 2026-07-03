@@ -1,0 +1,101 @@
+/* =============================================
+   CHANGE LIST TABLE
+   ============================================= */
+#result_list {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius) !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+#result_list thead th {
+  background: rgba(124,106,255,0.1) !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+  color: var(--text-muted) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+  padding: 0.85rem 1rem !important;
+}
+
+#result_list thead th a,
+#result_list thead th a:link,
+#result_list thead th a:visited {
+  color: var(--text-muted) !important;
+  text-decoration: none !important;
+}
+#result_list thead th.sorted a { color: var(--accent-2) !important; }
+
+#result_list tbody tr {
+  border-bottom: 1px solid var(--glass-border) !important;
+  transition: background var(--transition) !important;
+}
+#result_list tbody tr:last-child { border-bottom: none !important; }
+
+#result_list tbody tr:hover td {
+  background: var(--bg-card-hover) !important;
+}
+
+#result_list tbody td {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+  padding: 0.85rem 1rem !important;
+  font-size: 0.9rem !important;
+}
+
+#result_list tbody td a {
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: color var(--transition) !important;
+}
+#result_list tbody td a:hover { color: var(--accent-2) !important; }
+
+/* =============================================
+   ACTION BAR & TOOLBAR (SEARCH)
+   ============================================= */
+.actions, #toolbar {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius) !important;
+  padding: 0.75rem 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.actions select, #toolbar input[type="text"] {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 8px !important;
+  color: var(--text-primary) !important;
+  padding: 0.45rem 0.85rem !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.875rem !important;
+}
+
+/* =============================================
+   PAGINATOR
+   ============================================= */
+.paginator {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  font-size: 0.85rem !important;
+  border-top: 1px solid var(--glass-border) !important;
+  padding: 0.75rem 1rem !important;
+}
+.paginator a, .paginator a:visited {
+  color: var(--accent-2) !important;
+  text-decoration: none !important;
+  padding: 0.3rem 0.7rem !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--glass-border) !important;
+}
+.paginator a:hover { background: var(--bg-card-hover) !important; }
+.paginator .this-page {
+  background: rgba(124,106,255,0.2) !important;
+  color: var(--accent-2) !important;
+  border-radius: 6px !important;
+  padding: 0.3rem 0.7rem !important;
+}

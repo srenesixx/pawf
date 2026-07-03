@@ -1,0 +1,18 @@
+/* =============================================
+   LOGIN PAGE — Suppress Django Default Styles
+   ============================================= */
+
+/* Hide Django's default chrome on login page */
+body.login #container,
+body.login #header,
+body.login #footer,
+body.login div.breadcrumbs {
+  display: none !important;
+}
+
+/* Base background override */
+body.login {
+  background: #0a0a0f !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}

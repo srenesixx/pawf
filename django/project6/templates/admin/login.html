@@ -1,0 +1,321 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="id" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% trans "Log in" %} | Django Blog Admin</title>
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0f;
+      color: #f1f0ff;
+      overflow: hidden;
+    }
+
+    /* ── Animated background orbs ── */
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::before {
+      width: 640px; height: 640px;
+      background: radial-gradient(circle, rgba(124,106,255,0.28) 0%, transparent 70%);
+      top: -180px; left: -180px;
+      animation: floatOrb1 10s ease-in-out infinite alternate;
+    }
+    body::after {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, rgba(244,114,182,0.22) 0%, transparent 70%);
+      bottom: -120px; right: -120px;
+      animation: floatOrb2 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatOrb1 {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(70px,50px) scale(1.12); }
+    }
+    @keyframes floatOrb2 {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(-60px,-40px) scale(1.1); }
+    }
+
+    /* ── Grid background ── */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(124,106,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,106,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ── Particles ── */
+    .particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: particleFloat linear infinite;
+    }
+    @keyframes particleFloat {
+      0%   { transform: translateY(105vh) scale(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-5vh) scale(1); opacity: 0; }
+    }
+
+    /* ── Page layout ── */
+    .page {
+      position: relative; z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ── Login wrapper ── */
+    .login-wrapper {
+      width: 100%; max-width: 440px;
+    }
+
+    /* ── Brand ── */
+    .brand {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .brand-icon {
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, #7c6aff 0%, #a78bfa 50%, #f472b6 100%);
+      border-radius: 20px;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 40px rgba(124,106,255,0.45), 0 0 80px rgba(124,106,255,0.15);
+      animation: pulseLogo 3s ease-in-out infinite;
+    }
+    @keyframes pulseLogo {
+      0%,100% { box-shadow: 0 0 40px rgba(124,106,255,0.45), 0 0 80px rgba(124,106,255,0.15); }
+      50%      { box-shadow: 0 0 60px rgba(124,106,255,0.65), 0 0 100px rgba(124,106,255,0.25); }
+    }
+    .brand-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 800;
+      background: linear-gradient(135deg, #7c6aff 0%, #a78bfa 50%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      margin-bottom: 0.3rem;
+    }
+    .brand-sub {
+      font-size: 0.82rem; color: #5c5b7a; letter-spacing: 0.5px;
+    }
+
+    /* ── Glass card ── */
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 24px;
+      padding: 2.5rem 2.25rem;
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.07);
+      animation: cardEnter 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    @keyframes cardEnter {
+      from { opacity: 0; transform: translateY(28px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Fields ── */
+    .field { margin-bottom: 1.25rem; }
+    .field label {
+      display: block;
+      font-size: 0.73rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.9px;
+      color: #a9a8c9;
+      margin-bottom: 0.55rem;
+    }
+    .field-inner { position: relative; }
+    .field-icon {
+      position: absolute; left: 1rem; top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem; opacity: 0.4; pointer-events: none;
+    }
+    .field input[type="text"],
+    .field input[type="password"] {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      color: #f1f0ff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      padding: 0.875rem 1rem 0.875rem 2.85rem;
+      transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+      outline: none;
+    }
+    .field input:focus {
+      border-color: #7c6aff;
+      box-shadow: 0 0 0 3px rgba(124,106,255,0.22), 0 0 20px rgba(124,106,255,0.1);
+      background: rgba(124,106,255,0.06);
+    }
+    .field input::placeholder { color: #3d3c5a; }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      margin: 1.5rem 0;
+    }
+
+    /* ── Submit button ── */
+    .btn-login {
+      width: 100%;
+      padding: 0.9rem 1.5rem;
+      background: linear-gradient(135deg, #7c6aff 0%, #a78bfa 50%, #f472b6 100%);
+      border: none; border-radius: 12px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem; font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 6px 24px rgba(124,106,255,0.4);
+      position: relative; overflow: hidden;
+    }
+    .btn-login::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0; transition: opacity 0.25s;
+    }
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(124,106,255,0.55);
+    }
+    .btn-login:hover::before { opacity: 1; }
+    .btn-login:active { transform: translateY(0); }
+
+    /* ── Footer ── */
+    .login-footer {
+      text-align: center;
+      margin-top: 1.75rem;
+      font-size: 0.75rem;
+      color: #3d3c5a;
+      line-height: 1.7;
+    }
+    .login-footer a {
+      color: #7c6aff; text-decoration: none;
+      transition: color 0.2s;
+    }
+    .login-footer a:hover { color: #a78bfa; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="particles" id="particles"></div>
+
+  <div class="page">
+    <div class="login-wrapper">
+
+      <!-- Brand -->
+      <div class="brand">
+        <div class="brand-icon">✦</div>
+        <h1 class="brand-title">Django Blog</h1>
+        <p class="brand-sub">Masuk untuk melanjutkan</p>
+      </div>
+
+      <!-- Card -->
+      <div class="card">
+        <form action="{{ app_path }}" method="post" id="login-form">
+          {% csrf_token %}
+
+          <div class="field">
+            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+            <div class="field-inner">
+              <span class="field-icon">👤</span>
+              <input
+                type="text"
+                name="{{ form.username.html_name }}"
+                id="{{ form.username.id_for_label }}"
+                autocomplete="username"
+                autofocus
+                placeholder="Masukkan username..."
+                {% if form.username.value %}value="{{ form.username.value }}"{% endif %}
+              >
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+            <div class="field-inner">
+              <span class="field-icon">🔒</span>
+              <input
+                type="password"
+                name="{{ form.password.html_name }}"
+                id="{{ form.password.id_for_label }}"
+                autocomplete="current-password"
+                placeholder="Masukkan password..."
+              >
+            </div>
+          </div>
+
+          <input type="hidden" name="next" value="{{ next }}">
+
+          <div class="divider"></div>
+
+          <button type="submit" class="btn-login">Masuk →</button>
+        </form>
+      </div>
+
+      <p class="login-footer">
+        Django Blog Admin &middot; &copy; 2026<br>
+        Dibangun dengan ❤️ dan <a href="https://djangoproject.com" target="_blank" rel="noopener">Django</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script>
+    // Floating particles
+    (function() {
+      const c = document.getElementById('particles');
+      if (!c) return;
+      const colors = [
+        'rgba(124,106,255,0.55)', 'rgba(167,139,250,0.45)',
+        'rgba(244,114,182,0.45)', 'rgba(255,255,255,0.18)'
+      ];
+      for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 3 + 2;
+        p.style.cssText = `
+          left:${Math.random()*100}%;
+          width:${size}px; height:${size}px;
+          background:${colors[Math.floor(Math.random()*colors.length)]};
+          animation-duration:${Math.random()*12+8}s;
+          animation-delay:${Math.random()*12}s;
+          filter:blur(${Math.random()>.5?'1px':'0'});
+        `;
+        c.appendChild(p);
+      }
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Active filter banner -->
+{% if active_category or active_tag or query %}
+<div class="active-filter-bar">
+  <span>Menampilkan hasil untuk:&nbsp;</span>
+  {% if query %}<span class="filter-badge">🔍 "{{ query }}"</span>{% endif %}
+  {% if active_category %}<span class="filter-badge">📁 {{ active_category.name }}</span>{% endif %}
+  {% if active_tag %}<span class="filter-badge">🏷️ {{ active_tag.name }}</span>{% endif %}
+  <a href="{% url 'home' %}" class="filter-clear">✕ Reset</a>
+</div>
+{% endif %}
+
+<!-- Post Cards -->
+{% for post in posts %}
+<article class="post-entry">
+
+  {% if post.cover_image %}
+  <img src="{{ post.cover_image }}" alt="{{ post.title }}">
+  {% endif %}
+
+  <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+
+  <!-- Meta: Author · Category -->
+  <div class="post-meta">
+    <span class="post-author">{{ post.author }}</span>
+    <span class="meta-sep">·</span>
+    {% if post.category %}
+    <a href="{% url 'home' %}?category={{ post.category.id }}" class="category-badge">
+      {{ post.category.name }}
+    </a>
+    {% else %}
+    <span class="no-category">Tanpa Kategori</span>
+    {% endif %}
+    <span class="meta-sep">·</span>
+    <span class="post-date">{{ post.created_at|date:"d M Y" }}</span>
+  </div>
+
+  <!-- Tags -->
+  <div class="post-tags">
+    {% for tag in post.tags.all %}
+    <a href="{% url 'home' %}?tag={{ tag.id }}" class="tag-chip">{{ tag.name }}</a>
+    {% empty %}
+    <span class="no-tags">Tanpa tag</span>
+    {% endfor %}
+  </div>
+
+  <!-- Excerpt -->
+  <p class="post-excerpt">{{ post.body }}</p>
+
+  <a href="{{ post.get_absolute_url }}" class="read-more">Baca selengkapnya →</a>
+
+</article>
+{% empty %}
+<div class="empty-state">
+  <p>😔 Tidak ada postingan yang ditemukan.</p>
+  {% if active_category or active_tag or query %}
+  <a href="{% url 'home' %}" class="btn-reset">Tampilkan semua post</a>
+  {% endif %}
+</div>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,278 @@
+/* =============================================
+   FORM INPUTS & LABELS
+   ============================================= */
+.form-row {
+  border-bottom: 1px solid var(--glass-border) !important;
+  padding: 1rem 0 !important;
+}
+.form-row:last-child { border-bottom: none !important; }
+
+.form-row label {
+  color: var(--text-muted) !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.7px !important;
+}
+
+input[type="text"], input[type="password"], input[type="email"],
+input[type="url"], input[type="number"], textarea, select {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 8px !important;
+  color: var(--text-primary) !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.9rem !important;
+  padding: 0.6rem 0.9rem !important;
+  transition: border-color var(--transition), box-shadow var(--transition) !important;
+}
+input[type="text"]:focus, input[type="password"]:focus,
+textarea:focus, select:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(124,106,255,0.2) !important;
+  outline: none !important;
+}
+
+/* =============================================
+   SELECT OPTIONS (Fix for invisible text on native dropdowns)
+   ============================================= */
+select option {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+/* =============================================
+   FIELDSETS
+   ============================================= */
+fieldset {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius) !important;
+  padding: 1.25rem 1.5rem !important;
+  margin-bottom: 1.25rem !important;
+}
+
+fieldset h2 {
+  color: var(--accent-2) !important;
+  font-size: 0.75rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.75rem !important;
+}
+
+/* =============================================
+   SUBMIT ROW
+   ============================================= */
+.submit-row {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius) !important;
+  padding: 1rem 1.25rem !important;
+  margin-top: 1.25rem !important;
+  display: flex !important;
+  gap: 0.75rem !important;
+  align-items: center !important;
+}
+
+/* =============================================
+   OBJECT TOOLS (e.g. History link, Add link)
+   ============================================= */
+.object-tools a {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 50px !important;
+  color: var(--accent-2) !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  padding: 0.4rem 1rem !important;
+  text-decoration: none !important;
+  transition: background var(--transition), border-color var(--transition) !important;
+}
+.object-tools a:hover {
+  background: var(--bg-card-hover) !important;
+  border-color: rgba(124,106,255,0.3) !important;
+}
+.object-tools a.addlink { background: rgba(124,106,255,0.12) !important; }
+
+/* =============================================
+   INLINE TABLES / GROUPS
+   ============================================= */
+.inline-group .tabular table {
+  background: transparent !important;
+}
+.inline-related h3 {
+  background: var(--bg-secondary) !important;
+  color: var(--accent-2) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 8px !important;
+  padding: 0.6rem 1rem !important;
+  font-size: 0.8rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.7px !important;
+}
+
+/* =============================================
+   SELECT2 AUTOCOMPLETE WIDGETS
+   ============================================= */
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 8px !important;
+  color: var(--text-primary) !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background: rgba(124, 106, 255, 0.2) !important;
+  border: 1px solid var(--accent) !important;
+  color: var(--text-primary) !important;
+  border-radius: 4px !important;
+  padding: 2px 6px !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+  color: var(--accent-pink) !important;
+  margin-right: 5px !important;
+}
+
+.select2-dropdown {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  color: var(--text-primary) !important;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--text-primary) !important;
+  border-radius: 4px !important;
+}
+
+.select2-container--default .select2-results__option[aria-selected=true] {
+  background: rgba(124, 106, 255, 0.15) !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+
+/* =============================================
+   FILTER HORIZONTAL WIDGET (.selector)
+   ============================================= */
+.selector {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  margin-bottom: 1rem !important;
+}
+
+.selector-available, .selector-chosen {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  flex: 1 1 300px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+}
+
+.selector h2 {
+  font-size: 0.8rem !important;
+  color: var(--text-muted) !important;
+  margin: 0 0 0.5rem 0 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.selector-filter {
+  margin-bottom: 0.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.selector select[multiple] {
+  width: 100% !important;
+  height: 250px !important;
+  padding: 0.5rem !important;
+  overflow-x: hidden !important; /* Hide horizontal scroll to prevent overlap */
+  overflow-y: auto !important;
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--glass-border) !important;
+}
+
+.selector select[multiple] option {
+  padding: 0.4rem 0.6rem !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+  font-size: 0.85rem !important;
+  white-space: pre-wrap !important; /* Wrap long permission names */
+  word-break: break-word !important;
+}
+
+.selector-chooser {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.selector-chooser li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.selector-chooser a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 50% !important;
+  color: var(--accent) !important;
+  text-decoration: none !important;
+  transition: all var(--transition) !important;
+}
+
+.selector-chooser a:hover {
+  background: var(--accent) !important;
+  color: #fff !important;
+  box-shadow: 0 0 10px rgba(124,106,255,0.4) !important;
+}
+
+.selector-chooseall, .selector-clearall {
+  display: block !important;
+  text-align: center !important;
+  margin-top: 0.8rem !important;
+  padding: 0.5rem !important;
+  background: rgba(124,106,255,0.1) !important;
+  color: var(--accent-2) !important;
+  border-radius: 4px !important;
+  text-decoration: none !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  transition: all var(--transition) !important;
+  border: 1px solid transparent !important;
+}
+
+.selector-chooseall:hover, .selector-clearall:hover {
+  background: rgba(124,106,255,0.2) !important;
+  border-color: rgba(124,106,255,0.4) !important;
+}

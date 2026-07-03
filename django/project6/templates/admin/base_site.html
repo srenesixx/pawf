@@ -1,0 +1,214 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | Django Blog Admin{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}">✦ Django Blog</a>
+</h1>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+{% endblock %}
+
+{# ── Hapus nav-sidebar sepenuhnya dari DOM ── #}
+{% block nav-sidebar %}{% endblock %}
+
+{% block footer %}
+  <p>Django Blog Admin &middot; &copy; 2026 &middot; Dibangun dengan ❤️ dan Django</p>
+{% endblock %}
+
+{% block extrascripts %}
+<!-- Custom Iframe Modal for Related Object Popups -->
+<div id="django-admin-modal" class="admin-modal">
+  <div class="admin-modal-overlay" onclick="closeAdminModal()"></div>
+  <div class="admin-modal-container">
+    <div class="admin-modal-header">
+      <span class="admin-modal-title">Tambah / Ubah Item</span>
+      <button class="admin-modal-close" onclick="closeAdminModal()">✕</button>
+    </div>
+    <div class="admin-modal-body">
+      <iframe id="admin-modal-iframe" src="about:blank"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openAdminModal(url) {
+    const modal = document.getElementById('django-admin-modal');
+    const iframe = document.getElementById('admin-modal-iframe');
+    if (modal && iframe) {
+      iframe.src = url;
+      modal.style.setProperty('display', 'flex', 'important');
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeAdminModal() {
+    const modal = document.getElementById('django-admin-modal');
+    const iframe = document.getElementById('admin-modal-iframe');
+    if (modal && iframe) {
+      iframe.src = 'about:blank';
+      modal.style.setProperty('display', 'none', 'important');
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Handle closing with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAdminModal();
+    }
+  });
+
+  // Safe wrapper for Django dismiss handlers
+  function wrapDismissHandlers() {
+    const handlers = [
+      'dismissAddAnotherPopup',
+      'dismissAddRelatedObjectPopup',
+      'dismissChangeRelatedObjectPopup',
+      'dismissDeleteRelatedObjectPopup'
+    ];
+
+    handlers.forEach(name => {
+      const original = window[name];
+      if (original && !original.__wrapped) {
+        window[name] = function(win, ...args) {
+          try {
+            original(win, ...args);
+          } catch(err) {
+            console.error("Django original dismiss error:", err);
+          }
+          closeAdminModal();
+        };
+        window[name].__wrapped = true;
+      }
+    });
+  }
+
+  // Run wrapper immediately (for already loaded scripts)
+  wrapDismissHandlers();
+
+  // Intercept window.open calls immediately
+  const originalWindowOpen = window.open;
+  window.open = function(url, name, specs) {
+    const urlStr = url ? String(url) : '';
+    if (urlStr && urlStr.indexOf('_popup=1') !== -1) {
+      openAdminModal(urlStr);
+      
+      // Wrap handlers just in case they were loaded late
+      wrapDismissHandlers();
+      
+      const mockWin = {
+        close: function() { closeAdminModal(); },
+        focus: function() {},
+        blur: function() {},
+        opener: window
+      };
+      
+      Object.defineProperty(mockWin, 'contentWindow', {
+        get() {
+          const iframe = document.getElementById('admin-modal-iframe');
+          return iframe ? iframe.contentWindow : null;
+        }
+      });
+      
+      return mockWin;
+    }
+    return originalWindowOpen(url, name, specs);
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Run wrapper on DOM load
+    wrapDismissHandlers();
+
+    const iframe = document.getElementById('admin-modal-iframe');
+    if (iframe) {
+      iframe.addEventListener('load', function() {
+        // Skip blank pages
+        try {
+          if (!iframe.contentWindow || iframe.contentWindow.location.href === 'about:blank') return;
+        } catch(e) { return; }
+
+        try {
+          const iframeWin = iframe.contentWindow;
+          const doc = iframeWin.document;
+
+          // ── UI tweaks inside iframe ───────────────────────────────────
+          const iframeH1 = doc.querySelector('#content h1');
+          if (iframeH1) {
+            document.querySelector('.admin-modal-title').textContent = iframeH1.textContent;
+            iframeH1.style.display = 'none';
+          }
+          const header = doc.getElementById('header');
+          if (header) header.style.display = 'none';
+          const footer = doc.getElementById('footer');
+          if (footer) footer.style.display = 'none';
+          const breadcrumbs = doc.querySelector('.breadcrumbs');
+          if (breadcrumbs) breadcrumbs.style.display = 'none';
+          iframeWin.opener = window;
+
+          const dismissNames = [
+            'dismissAddAnotherPopup',
+            'dismissAddRelatedObjectPopup',
+            'dismissChangeRelatedObjectPopup',
+            'dismissDeleteRelatedObjectPopup',
+          ];
+
+          dismissNames.forEach(name => {
+            // Wait for Django's own script to define the function, then wrap it
+            const original = iframeWin[name];
+            if (original && !original.__parentWrapped) {
+              iframeWin[name] = function(...args) {
+                try { original.apply(iframeWin, args); } catch(err) { console.error(err); }
+                // Close the parent modal after Django updates the parent form
+                window.closeAdminModal();
+              };
+              iframeWin[name].__parentWrapped = true;
+            }
+          });
+
+          // ── Fallback: close modal if Save button is clicked ───────────
+          // For cases where dismiss functions haven't loaded yet, intercept
+          // the submit event of the popup form directly.
+          const popupForm = doc.querySelector('form');
+          if (popupForm && !popupForm.__modalBound) {
+            popupForm.addEventListener('submit', () => {
+              // Give Django a moment to call its dismiss handler;
+              // if dismiss handler doesn't fire, close manually.
+              setTimeout(() => {
+                try {
+                  const loc = iframe.contentWindow.location.href;
+                  // If still on same page, the submit redirected — close the modal
+                  if (loc && loc !== 'about:blank') {
+                    window.closeAdminModal();
+                  }
+                } catch(e) {
+                  window.closeAdminModal();
+                }
+              }, 400);
+            });
+            popupForm.__modalBound = true;
+          }
+
+        } catch(e) {
+          console.warn('Iframe post-load injection warning:', e);
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

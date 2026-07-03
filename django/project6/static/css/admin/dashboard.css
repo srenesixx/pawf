@@ -1,0 +1,183 @@
+/* =============================================
+   DASHBOARD 2-COLUMN GRID LAYOUT
+   ============================================= */
+body.dashboard #content {
+  display: grid !important;
+  grid-template-columns: 2fr 1fr !important;
+  grid-template-areas:
+    "title  title"
+    "main   related" !important;
+  gap: 1.5rem 2rem !important;
+  max-width: 1100px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  align-items: start !important;
+}
+
+body.dashboard #content > h1 {
+  grid-area: title !important;
+  text-align: center !important;
+  /* Gradient title */
+  background: linear-gradient(135deg, #7c6aff 0%, #a78bfa 50%, #f472b6 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+body.dashboard #content-main {
+  grid-area: main !important;
+  float: none !important;
+  width: 100% !important;
+  max-width: unset !important;
+  min-width: unset !important;
+}
+
+body.dashboard #content-related {
+  grid-area: related !important;
+  float: none !important;
+  width: 100% !important;
+  max-width: unset !important;
+  min-width: unset !important;
+  margin-left: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+body.dashboard #content-related br.clear,
+body.dashboard #content-main br.clear {
+  display: none !important;
+}
+
+#recent-actions-module {
+  margin: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+#recent-actions-module ul li:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+
+body.dashboard .app-auth,
+body.dashboard .app-blog,
+body.dashboard #recent-actions-module {
+  width: 100% !important;
+}
+
+.dashboard #content {
+  padding: 2rem !important;
+}
+
+/* =============================================
+   MODULES & CARDS
+   ============================================= */
+.module, .module table {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  border-radius: var(--radius) !important;
+  overflow: hidden !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25) !important;
+}
+
+.module h2, .module caption, .inline-group h2 {
+  background: rgba(124,106,255,0.08) !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+  color: var(--accent-2) !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  padding: 0.85rem 1.25rem !important;
+}
+
+.module ul li a,
+.module table a {
+  color: var(--accent-2) !important;
+  text-decoration: none !important;
+  transition: color var(--transition) !important;
+}
+.module ul li a:hover,
+.module table a:hover { color: var(--text-primary) !important; }
+
+/* =============================================
+   FIX: Recent Actions — hapus highlight merah/pink bawaan Django
+   ============================================= */
+
+/* ul.actionlist adalah container Recent Actions */
+ul.actionlist { list-style: none !important; padding: 0 !important; margin: 0 !important; }
+
+/* Semua li di Recent Actions: hapus background menyala */
+ul.actionlist li {
+  background: transparent !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+  padding: 0.55rem 1.25rem !important;
+  transition: background var(--transition) !important;
+}
+ul.actionlist li:last-child { border-bottom: none !important; }
+ul.actionlist li:hover { background: rgba(255,255,255,0.03) !important; }
+
+/* li.addlink — tambah item (biasanya highlight merah/oranye) */
+ul.actionlist li.addlink {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+}
+ul.actionlist li.addlink a {
+  color: var(--accent-2) !important;
+}
+
+/* li.changelink */
+ul.actionlist li.changelink {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+}
+ul.actionlist li.changelink a {
+  color: var(--accent-2) !important;
+}
+
+/* li.deletelink */
+ul.actionlist li.deletelink {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+}
+ul.actionlist li.deletelink a {
+  color: #f472b6 !important;
+}
+
+/* Sub-text (nama model) di bawah nama item */
+ul.actionlist li .mini {
+  font-size: 0.75rem !important;
+  color: var(--text-muted) !important;
+}
+
+/* =============================================
+   FIX: + Add / Change links — ganti hijau ke ungu
+   ============================================= */
+
+/* Warna + Add di daftar model dashboard */
+a.addlink {
+  color: var(--accent-2) !important;
+}
+a.changelink {
+  color: var(--text-muted) !important;
+}
+
+/* Table cells in app index */
+#content-main .app-auth td,
+#content-main .app-blog td {
+  background: transparent !important;
+}
+#content-main .app-auth td a,
+#content-main .app-blog td a {
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+}
+
+/* Model name links (th) */
+#content-main table th a {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+}

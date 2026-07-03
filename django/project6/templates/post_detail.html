@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Back navigation -->
+<a href="{% url 'home' %}" class="back-link">Kembali ke beranda</a>
+
+<!-- Post Header -->
+<div class="post-detail-header">
+
+  {% if post.cover_image %}
+  <img src="{{ post.cover_image }}" alt="{{ post.title }}">
+  {% endif %}
+
+  <h2>{{ post.title }}</h2>
+
+  <!-- Meta: Author · Category · Date -->
+  <div class="post-meta">
+    <span class="post-author">{{ post.author }}</span>
+    <span class="meta-sep">·</span>
+    {% if post.category %}
+    <a href="{% url 'home' %}?category={{ post.category.id }}" class="category-badge">
+      {{ post.category.name }}
+    </a>
+    {% else %}
+    <span class="no-category">Tanpa Kategori</span>
+    {% endif %}
+    <span class="meta-sep">·</span>
+    <span class="post-date">{{ post.created_at|date:"d M Y" }}</span>
+  </div>
+
+  <!-- Tags -->
+  <div class="post-tags" style="margin-top: 0.75rem;">
+    {% for tag in post.tags.all %}
+    <a href="{% url 'home' %}?tag={{ tag.id }}" class="tag-chip">{{ tag.name }}</a>
+    {% empty %}
+    <span class="no-tags">Tanpa tag</span>
+    {% endfor %}
+  </div>
+
+</div>
+
+<!-- Post Body -->
+<div class="post-body">{{ post.body }}</div>
+
+<!-- Leave a Comment -->
+<h3 class="section-title">Tinggalkan Komentar</h3>
+<form method="post">
+  {% csrf_token %}
+  <label for="name">Nama</label>
+  <input type="text" name="name" id="name" placeholder="Nama kamu..." required>
+
+  <label for="body">Komentar</label>
+  <textarea name="body" id="body" rows="4" placeholder="Tulis komentar..." required></textarea>
+
+  <button type="submit">Kirim Komentar</button>
+</form>
+
+<!-- Comments List -->
+<h3 class="section-title">Komentar ({{ comments|length }})</h3>
+{% for comment in comments %}
+<div class="comment">
+  <strong>{{ comment.name }}</strong>
+  <p>{{ comment.body }}</p>
+</div>
+{% empty %}
+<p style="text-align:center; padding:2rem 0; color:var(--text-muted);">
+  Belum ada komentar. Jadilah yang pertama! 💬
+</p>
+{% endfor %}
+
+{% endblock content %}

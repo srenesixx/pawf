@@ -1,0 +1,11 @@
+/* ==========================================================================
+   Django Admin Custom Stylesheet
+   ========================================================================== */
+
+/* Modular imports for better readability and maintainability */
+@import url('admin/variables.css');
+@import url('admin/layout.css');
+@import url('admin/dashboard.css');
+@import url('admin/forms.css');
+@import url('admin/tables.css');
+@import url('admin/login.css');
